@@ -24,10 +24,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatRippleModule } from '@angular/material/core';
 import { DialogDetailRowComponent } from './dialog-detail-row/dialog-detail-row.component';
 import { SearchFormComponent } from './search-form/search-form.component';
+import { DialogDetailComponent } from './dialog-detail/dialog-detail.component';
 
 @NgModule({
   imports: [
-    RouterModule,
+  RouterModule,
     CommonModule,
     ReactiveFormsModule,
     MatToolbarModule,
@@ -51,6 +52,7 @@ import { SearchFormComponent } from './search-form/search-form.component';
     ToolbarComponent,
     GridContainerComponent,
     UnicornTableComponent,
+    DialogDetailComponent,
     DialogDetailRowComponent,
     SearchFormComponent,
   ],
@@ -62,6 +64,7 @@ import { SearchFormComponent } from './search-form/search-form.component';
     GridContainerComponent,
     UnicornTableComponent,
     DialogDetailRowComponent,
+    DialogDetailComponent,
     SearchFormComponent,
 
     // Modules

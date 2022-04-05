@@ -1,0 +1,10 @@
+<div class="detail-dialog">
+  <h2>Detailed information</h2>
+  <app-dialog-detail-row label="Resource Typ" [data]="data.resourceType"></app-dialog-detail-row>
+  <app-dialog-detail-row label="Name" [data]="data.name"></app-dialog-detail-row>
+  <app-dialog-detail-row label="ID" [data]="data.id"></app-dialog-detail-row>
+  <app-dialog-detail-row *ngIf="isPatient" label="Geburtstag" [data]="data.birthDate"></app-dialog-detail-row>
+  <app-dialog-detail-row *ngIf="isPatient" label="Gender" [data]="data.gender"></app-dialog-detail-row>
+  <app-dialog-detail-row *ngIf="isPatient" label="Adresse" [data]="data.address"></app-dialog-detail-row>
+  <app-dialog-detail-row *ngIf="!isPatient" label="Telecom" [data]="data.telecom"></app-dialog-detail-row>
+</div>

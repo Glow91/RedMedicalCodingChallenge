@@ -3,6 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { IUnicornTableColumn } from '../models';
 import { IFhirPatient, IFhirPractitioner } from '@red-probeaufgabe/types';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogDetailComponent } from '../dialog-detail/dialog-detail.component';
 
 @Component({
   selector: 'app-unicorn-table',
@@ -22,7 +24,13 @@ export class UnicornTableComponent implements OnInit {
     this.dataSource.data = value;
   }
 
+  constructor(public dialog: MatDialog) {}
+
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  tableRowClicked(e: IFhirPatient | IFhirPractitioner) {
+    this.dialog.open(DialogDetailComponent, { width: '50%', data: e});
   }
 }

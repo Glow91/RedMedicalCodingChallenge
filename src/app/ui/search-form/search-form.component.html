@@ -1,1 +1,13 @@
 <!-- implement search form here -->
+<div class="container mat-elevation-z8">
+<mat-form-field appearance="standard">
+    <mat-label>Search</mat-label>
+    <input class="search-input" matInput [formControl]="searchForm" type="search" (change)="searchChanged()">
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+    <mat-label>Filter</mat-label>
+    <mat-select class="select-input" [formControl]="roleForm" (valueChange)="roleChanged($event)">
+        <mat-option *ngFor="let role of roleList" [value]="role.value">{{role.label}}</mat-option>
+    </mat-select>
+    </mat-form-field>
+</div>

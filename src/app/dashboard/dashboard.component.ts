@@ -4,7 +4,8 @@ import { catchError, map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { SiteTitleService } from '@red-probeaufgabe/core';
 import { FhirSearchFn, IFhirPatient, IFhirPractitioner, IFhirSearchResponse } from '@red-probeaufgabe/types';
 import { IUnicornTableColumn } from '@red-probeaufgabe/ui';
-import { AbstractSearchFacadeService } from '@red-probeaufgabe/search';
+import { SearchFacadeService } from '@red-probeaufgabe/search';
+import { FilterObject } from './../ui/search-form/search-form.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,31 +23,49 @@ export class DashboardComponent {
   ]);
   isLoading = true;
 
+  private _searchFilter: FilterObject = {
+    query: '',
+    filter: FhirSearchFn.SearchAll
+  };
+
   /*
    * Implement search on keyword or fhirSearchFn change
    **/
-  search$: Observable<IFhirSearchResponse<IFhirPatient | IFhirPractitioner>> = this.searchFacade
-    .search(FhirSearchFn.SearchAll, '')
+  search$: Observable<IFhirSearchResponse<IFhirPatient | IFhirPractitioner>>;
+  entries$: Observable<Array<IFhirPatient | IFhirPractitioner>>;
+  totalLength$: Observable<number>
+
+  // Inject the concrete serveice instead of the abstract, also added the service to to providers of the dashboard module
+  constructor(private siteTitleService: SiteTitleService, private searchFacade: SearchFacadeService) {
+    this.siteTitleService.setSiteTitle('Dashboard');
+    this._updateDataSource();
+  }
+
+  searchFilterChanged(newFilter: FilterObject) {
+    this._searchFilter = newFilter;
+    this._updateDataSource();
+  }
+
+  private _updateDataSource() {
+    this.search$ = this.searchFacade
+    .search(this._searchFilter.filter, this._searchFilter.query)
     .pipe(
       catchError(this.handleError),
-      tap((data) => {
+      tap(() => {
         this.isLoading = false;
       }),
       shareReplay(),
     );
 
-  entries$: Observable<Array<IFhirPatient | IFhirPractitioner>> = this.search$.pipe(
-    map((data) => !!data && data.entry),
-    startWith([]),
-  );
+    this.entries$ = this.search$.pipe(
+      map((data) => !!data && data.entry),
+      startWith([]),
+    );
 
-  totalLength$ = this.search$.pipe(
-    map((data) => !!data && data.total),
-    startWith(0),
-  );
-
-  constructor(private siteTitleService: SiteTitleService, private searchFacade: AbstractSearchFacadeService) {
-    this.siteTitleService.setSiteTitle('Dashboard');
+    this.totalLength$ = this.search$.pipe(
+      map((data) => !!data && data.total),
+      startWith(0),
+    );
   }
 
   private handleError(): Observable<IFhirSearchResponse<IFhirPatient | IFhirPractitioner>> {
